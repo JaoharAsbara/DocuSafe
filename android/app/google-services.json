@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773761202171",
+    "project_id": "docusafe-papb",
+    "storage_bucket": "docusafe-papb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773761202171:android:849259cd2d49fe57ac3d5e",
+        "android_client_info": {
+          "package_name": "com.example.docusafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcLquvnTm5wqx5yPei7Dy7yjdbGnyI1TQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
