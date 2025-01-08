@@ -15,13 +15,11 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // Menyimpan UID ke SharedPreferences
   Future<void> saveUIDToPreferences(String uid) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('uid', uid);
   }
 
-  // Fungsi login
   Future<void> loginUser() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
@@ -34,14 +32,12 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     try {
-      // Login pengguna di Firebase Authentication
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Mendapatkan UID pengguna yang sedang login
       final String uid = userCredential.user?.uid ?? '';
 
       if (uid.isEmpty) {
@@ -51,16 +47,13 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-      // Menyimpan UID ke SharedPreferences
       saveUIDToPreferences(uid);
 
-      // Arahkan ke halaman utama setelah login berhasil
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
       );
     } on FirebaseAuthException catch (e) {
-      // Tampilkan error jika login gagal
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(e.message ?? 'Terjadi kesalahan!')),
       );
@@ -77,35 +70,30 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.20,
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Image.asset(
-                      'assets/docusafe_logo.jpg',
-                      height: 150,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'DOCUSAFE',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
-                        letterSpacing: 3.0,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/docusafe_logo.jpg',
+                  height: constraints.maxHeight * 0.2,
+                ),
+                const SizedBox(height: 8), // Jarak antara logo dan judul
+                const Text(
+                  'DOCUSAFE',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueAccent,
+                  ),
+                ),
+                const SizedBox(height: 32), // Jarak judul ke form login
+                Column(
+                  children: [
                     TextField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -127,7 +115,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(
+                        height: 16), // Jarak antara email dan password
                     TextField(
                       controller: passwordController,
                       obscureText: true,
@@ -149,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 20), // Jarak form dan tombol Masuk
                     ElevatedButton(
                       onPressed: loginUser,
                       style: ElevatedButton.styleFrom(
@@ -166,23 +155,23 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(fontSize: 18),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                  ],
+                ),
+                const SizedBox(height: 10), // Jarak tombol Masuk ke teks bawah
+                Column(
+                  children: [
                     const Text(
                       'Belum punya akun ya? Ayo daftar sekarang!',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.blueAccent,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.blueAccent),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 10), // Jarak teks ke tombol Daftar
                     OutlinedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RegisterPage(),
-                          ),
+                              builder: (context) => const RegisterPage()),
                         );
                       },
                       style: OutlinedButton.styleFrom(
@@ -196,22 +185,16 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       child: const Text(
                         'Daftar',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.blueAccent,
-                        ),
+                        style:
+                            TextStyle(fontSize: 18, color: Colors.blueAccent),
                       ),
                     ),
-                    const SizedBox(height: 20),
                   ],
                 ),
-              ),
+              ],
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.15,
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
